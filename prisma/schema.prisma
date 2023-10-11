@@ -32,19 +32,82 @@ model user {
 }
 
 model post {
-  id          BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  authorId    BigInt    @db.UnsignedBigInt
-  user        user      @relation(fields: [authorId], references: [id])
-  children    post[]    @relation("ParentToChildren")
-  post        post      @relation("ParentToChildren", fields: [parentId], references: [id])
-  parentId    BigInt    @db.UnsignedBigInt
-  title       String    @db.VarChar(75)
-  metaTitle   String    @db.VarChar(100)
-  slug        String    @db.VarChar(100)
-  summary     String    @db.TinyText
-  published   Int       @db.TinyInt
-  created_at  DateTime? @db.Timestamp(0)
-  updated_at  DateTime? @db.Timestamp(0)
-  publishedAt DateTime? @db.Timestamp(0)
-  content     String    @db.Text
+  id            BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  authorId      BigInt          @db.UnsignedBigInt
+  user          user            @relation(fields: [authorId], references: [id])
+  children      post[]          @relation("ParentToChildren")
+  post          post            @relation("ParentToChildren", fields: [parentId], references: [id])
+  parentId      BigInt          @db.UnsignedBigInt
+  title         String          @db.VarChar(75)
+  metaTitle     String          @db.VarChar(100)
+  slug          String          @db.VarChar(100)
+  summary       String          @db.TinyText
+  published     Int             @db.TinyInt
+  created_at    DateTime?       @db.Timestamp(0)
+  updated_at    DateTime?       @db.Timestamp(0)
+  publishedAt   DateTime?       @db.Timestamp(0)
+  content       String          @db.Text
+  post_comment  post_comment[]
+  post_tag      post_tag[]
+  post_meta     post_meta[]
+  post_category post_category[]
+}
+
+model post_comment {
+  id           BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  postId       BigInt         @db.UnsignedBigInt
+  post         post           @relation(fields: [postId], references: [id])
+  children     post_comment[] @relation("ParentToChildren")
+  post_comment post_comment   @relation("ParentToChildren", fields: [parentId], references: [id])
+  parentId     BigInt         @db.UnsignedBigInt
+  title        String         @db.VarChar(100)
+  published    Int            @db.TinyInt
+  created_at   DateTime?      @db.Timestamp(0)
+  publishedAt  DateTime?      @db.Timestamp(0)
+  content      String         @db.Text
+}
+
+model tag {
+  id        BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  title     String     @db.VarChar(75)
+  metaTitle String     @db.VarChar(100)
+  slug      String     @db.VarChar(100)
+  content   String     @db.Text
+  post_tag  post_tag[]
+}
+
+model post_tag {
+  id     BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  postId BigInt @db.UnsignedBigInt
+  post   post   @relation(fields: [postId], references: [id])
+  tagId  BigInt @db.UnsignedBigInt
+  tag    tag    @relation(fields: [tagId], references: [id])
+}
+
+model post_meta {
+  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+  postId  BigInt @db.UnsignedBigInt
+  post    post   @relation(fields: [postId], references: [id])
+  slug    String @db.VarChar(50)
+  content String @db.Text
+}
+
+model category {
+  id            BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  children      category[]      @relation("ParentToChildren")
+  post_comment  category        @relation("ParentToChildren", fields: [parentId], references: [id])
+  parentId      BigInt          @db.UnsignedBigInt
+  title         String          @db.VarChar(75)
+  metaTitle     String          @db.VarChar(100)
+  slug          String          @db.VarChar(100)
+  content       String          @db.Text
+  post_category post_category[]
+}
+
+model post_category {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  postId     BigInt   @db.UnsignedBigInt
+  post       post     @relation(fields: [postId], references: [id])
+  categotyId BigInt   @db.UnsignedBigInt
+  category   category @relation(fields: [categotyId], references: [id])
 }
