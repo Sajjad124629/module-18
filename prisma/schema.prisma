@@ -11,7 +11,7 @@ datasource db {
 }
 
 model user {
-  id           BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  id           Int   @id @default(autoincrement()) 
   firstName    String   @db.VarChar(50)
   middleName   String   @db.VarChar(50)
   lastName     String   @db.VarChar(50)
@@ -22,22 +22,16 @@ model user {
   lastLogin    DateTime @default(now()) @db.Timestamp(0)
   intro        String?  @db.TinyText
   profile      String?  @db.Text
-
-  // customer_profiles customer_profiles?
-  // invoice_products  invoice_products[]
-  // invoices          invoices[]
-  // product_carts     product_carts[]
-  // product_wishes    product_wishes[]
   post post[]
 }
 
 model post {
-  id            BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
-  authorId      BigInt          @db.UnsignedBigInt
+  id            Int          @id @default(autoincrement())
+  authorId      Int         
   user          user            @relation(fields: [authorId], references: [id])
   children      post[]          @relation("ParentToChildren")
   post          post            @relation("ParentToChildren", fields: [parentId], references: [id])
-  parentId      BigInt          @db.UnsignedBigInt
+  parentId      Int         
   title         String          @db.VarChar(75)
   metaTitle     String          @db.VarChar(100)
   slug          String          @db.VarChar(100)
@@ -54,12 +48,12 @@ model post {
 }
 
 model post_comment {
-  id           BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
-  postId       BigInt         @db.UnsignedBigInt
+  id           Int         @id @default(autoincrement())
+  postId       Int        
   post         post           @relation(fields: [postId], references: [id])
   children     post_comment[] @relation("ParentToChildren")
   post_comment post_comment   @relation("ParentToChildren", fields: [parentId], references: [id])
-  parentId     BigInt         @db.UnsignedBigInt
+  parentId     Int        
   title        String         @db.VarChar(100)
   published    Int            @db.TinyInt
   created_at   DateTime?      @db.Timestamp(0)
@@ -68,7 +62,7 @@ model post_comment {
 }
 
 model tag {
-  id        BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  id        Int     @id @default(autoincrement())
   title     String     @db.VarChar(75)
   metaTitle String     @db.VarChar(100)
   slug      String     @db.VarChar(100)
@@ -77,26 +71,26 @@ model tag {
 }
 
 model post_tag {
-  id     BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  postId BigInt @db.UnsignedBigInt
+  id     Int @id @default(autoincrement())
+  postId Int
   post   post   @relation(fields: [postId], references: [id])
-  tagId  BigInt @db.UnsignedBigInt
+  tagId  Int
   tag    tag    @relation(fields: [tagId], references: [id])
 }
 
 model post_meta {
-  id      BigInt @id @default(autoincrement()) @db.UnsignedBigInt
-  postId  BigInt @db.UnsignedBigInt
+  id      Int @id @default(autoincrement())
+  postId  Int
   post    post   @relation(fields: [postId], references: [id])
   slug    String @db.VarChar(50)
   content String @db.Text
 }
 
 model category {
-  id            BigInt          @id @default(autoincrement()) @db.UnsignedBigInt
+  id            Int          @id @default(autoincrement())
   children      category[]      @relation("ParentToChildren")
   post_comment  category        @relation("ParentToChildren", fields: [parentId], references: [id])
-  parentId      BigInt          @db.UnsignedBigInt
+  parentId      Int         
   title         String          @db.VarChar(75)
   metaTitle     String          @db.VarChar(100)
   slug          String          @db.VarChar(100)
@@ -105,9 +99,9 @@ model category {
 }
 
 model post_category {
-  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  postId     BigInt   @db.UnsignedBigInt
+  id         Int   @id @default(autoincrement())
+  postId     Int  
   post       post     @relation(fields: [postId], references: [id])
-  categotyId BigInt   @db.UnsignedBigInt
-  category   category @relation(fields: [categotyId], references: [id])
+  categoryId Int  
+  category   category @relation(fields: [categoryId], references: [id])
 }
